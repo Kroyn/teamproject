@@ -1,0 +1,44 @@
+name: Fullstack Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend:
+    name: Building and testing the backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+      - name: Setting dependencies
+        run: npm install --prefix backend
+      - name: Run backend tests
+        run: npm test --prefix backend
+
+  frontend:
+    name: Building and testing the frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Using Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+      - name: Setting frontend dependencies
+        run: npm install
+      - name: Frontend assembly
+        run: npm run build
+      - name: Lints and fixes files
+        run: npm run lint

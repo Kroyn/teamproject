@@ -1,4 +1,6 @@
-# workshit
+# LocalServices WIP
+
+# It's temporary
 
 ## Project setup
 ```
