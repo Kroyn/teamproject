@@ -1,3 +1,13 @@
-node_modules/ 
-dist/ 
-.env 
+dist/
+
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+backend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+frontend/dist/
+
+.DS_Store
