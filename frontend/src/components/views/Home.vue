@@ -1,149 +1,109 @@
 <template>
-  <div class="home">
-    <h1>Туристичні подорожі</h1>
-
-    <div class="search-bar">
-      <input type="text" placeholder="Пошук турів" v-model="searchQuery" />
-    </div>
-
-    <div class="tour-section">
-      <h2>Подорожі Україною</h2>
-      <div class="tour-slider">
-        <div class="tour" v-for="tour in filteredUkrainianTours" :key="tour.id">
-          <img :src="tour.image" :alt="tour.name" />
-          <h3>{{ tour.name }}</h3>
-          <p>{{ tour.description }}</p>
-          <p><strong>Ціна:</strong> {{ tour.price }} грн</p>
-          <button @click="selectTour(tour)">Переглянути</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tour-section">
-      <h2>Подорожі світом</h2>
-      <div class="tour-slider">
-        <div class="tour" v-for="tour in filteredWorldTours" :key="tour.id">
-          <img :src="tour.image" :alt="tour.name" />
-          <h3>{{ tour.name }}</h3>
-          <p>{{ tour.description }}</p>
-          <p><strong>Ціна:</strong> {{ tour.price }} грн</p>
-          <button @click="selectTour(tour)">Переглянути</button>
-        </div>
+  <div class="home-container">
+    <h2>Доступні послуги</h2>
+    <div class="category-grid">
+      <div class="category-box" v-for="(service, index) in services" :key="index">
+        <img :src="`/image/Послуги/${service.image}`" alt="" class="category-image" />
+        <div class="category-name">{{ service.name }}</div>
+        <button class="select-button" @click="goToCategory(service.name)">Обрати</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getTours } from '@/components/conect/ToursAPI';
-
 export default {
   name: 'HomePage',
   data() {
     return {
-      searchQuery: '',
-      allTours: [],
+      services: [
+        { name: 'Домашній майстер', image: 'home_master.jpg' },
+        { name: 'Ремонт техніки', image: 'tech_repair.jpg' },
+        { name: 'Оздоблювальні роботи', image: 'finishing_work.jpg' },
+        { name: 'Будівельні роботи', image: 'construction_work.jpg' },
+        { name: 'Меблеві роботи', image: 'furniture_work.jpg' },
+        { name: 'Клінінгові послуги', image: 'cleaning_services.jpg' },
+        { name: 'Перевезення вантажів', image: 'cargo_transport.jpg' },
+        { name: 'Догляд за дітьми', image: 'child_care.jpg' },
+        { name: 'Ремонт авто', image: 'car_repair.jpg' },
+        { name: 'Послуги репетиторів', image: 'tutoring_services.jpg' },
+      ]
     };
   },
-  computed: {
-    ukrainianTours() {
-      return this.allTours.filter(tour => tour.region === 'Україна');
-    },
-    worldTours() {
-      return this.allTours.filter(tour => tour.region !== 'Україна');
-    },
-    filteredUkrainianTours() {
-      return this.ukrainianTours.filter(tour =>
-        tour.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    filteredWorldTours() {
-      return this.worldTours.filter(tour =>
-        tour.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-  },
   methods: {
-    selectTour(tour) {
-      alert(`Ви вибрали тур: ${tour.name}`);
-    }
-  },
-  async mounted() {
-    try {
-      this.allTours = await getTours();
-    } catch (error) {
-      console.error('Не вдалося завантажити тури:', error);
+    goToCategory(name) {
+      this.$router.push({ name: 'category', params: { categoryName: name } });
     }
   }
 };
 </script>
 
 <style scoped>
-.home {
-  padding: 20px;
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background-color: #f4f4f9;
 }
 
-.search-bar {
-  margin-bottom: 20px;
+h2 {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
 }
 
-.search-bar input {
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
-  max-width: 450px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 14px;
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px 20px; 
+  justify-content: space-between;
 }
 
-.tour-section {
-  margin-bottom: 40px;
+
+.category-box {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+  width: 90%; 
+  height: 300px;
+  box-sizing: border-box;
 }
 
-.tour-slider {
-  display: flex;
-  overflow-x: auto;
-  padding: 10px 0;
-  gap: 20px;
+
+.category-box:hover {
+  transform: translateY(-4px);
 }
 
-.tour {
-  min-width: 200px;
-  flex-shrink: 0;
-  background: #f9f9f9;
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.category-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
-.tour img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.tour h3 {
-  margin: 10px 0 5px;
-}
-
-.tour p {
-  font-size: 14px;
-  color: #555;
-}
-
-.tour button {
-  margin-top: 10px;
-  background: #007bff;
+.select-button {
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #1e88e5;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.tour button:hover {
-  background: #0056b3;
+.select-button:hover {
+  background-color: #1565c0;
+}
+
+.category-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
 }
 </style>

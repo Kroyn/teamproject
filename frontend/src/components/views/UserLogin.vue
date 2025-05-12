@@ -27,14 +27,24 @@ export default {
       try {
         const data = await loginUser(this.email, this.password);
 
-        // Зберігаємо токен
-        localStorage.setItem('token', data.token);
+        // Перевірка наявності даних для користувача
+        if (data.token && data.user) {
+          // Зберігаємо токен і користувача
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Зберігаємо користувача (для бронювання)
-        localStorage.setItem('user', JSON.stringify(data.user));
+          // Якщо є додаткові дані, зберігаємо їх (наприклад, активні замовлення)
+          if (data.orders) {
+            localStorage.setItem('orders', JSON.stringify(data.orders));
+          }
 
-        this.$router.push({ name: 'profile' });
+          // Перенаправляємо користувача на профіль
+          this.$router.push({ name: 'profile' });
+        } else {
+          this.errorMessage = 'Невірний email або пароль.';
+        }
       } catch (err) {
+        console.error(err);
         this.errorMessage = 'Невірний email або пароль.';
       }
     }
@@ -42,7 +52,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .login-container {
   max-width: 400px;
   margin: 40px auto;

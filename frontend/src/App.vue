@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <header style="background-image: url('/image/header-bg.jpg'); background-size: cover; background-position: center;">
+    <header class="main-header">
       <div class="header-content">
         <div class="logo">
-          <h1>Туристичний сайт</h1>
+          <h1>Онлайн-сервіс замовлення послуг</h1>
+          <p class="subtitle">Знайди перевіреного фахівця для будь-якого завдання</p>
         </div>
         <nav class="corner-buttons">
           <button class="nav-button" @click="goToHome">Головна</button>
-          <button class="nav-button" @click="goToEquipment">Спорядження</button>
           <button class="nav-button" @click="goToProfile">Особистий кабінет</button>
         </nav>
       </div>
@@ -19,13 +19,13 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'MainApp',
   methods: {
     goToHome() {
       this.$router.push({ name: 'home' });
     },
-    goToEquipment() {
-      this.$router.push({ name: 'equipment' });
+    goToCreateOrder() {
+      this.$router.push({ name: 'create-order' }); // замінити на актуальний маршрут
     },
     goToProfile() {
       this.$router.push({ name: 'profile' });
@@ -48,78 +48,53 @@ body {
   min-height: 100vh;
 }
 
-header {
+.main-header {
+  background: linear-gradient(90deg, #1e88e5, #42a5f5);
   color: white;
-  padding: 50px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 40px 0;
+  text-align: center;
 }
 
 .header-content {
-  position: relative;
-  width: 90%;
   max-width: 1000px;
-  min-height: 200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .logo h1 {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  text-align: center;
-  margin: 0;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-top: 0;
+  color: #e0f7fa;
 }
 
 .corner-buttons {
-  position: absolute;
-  bottom: 20px;
-  right: -20px;
+  margin-top: 30px;
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .nav-button {
-  padding: 8px 15px;
-  font-size: 14px;
+  padding: 10px 20px;
+  font-size: 15px;
   font-weight: 600;
   color: white;
-  background-color: #007bff;
+  background-color: #ff5722;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .nav-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.nav-button:active {
-  background-color: #003f7f;
-  transform: scale(1);
-}
-
-.nav-button:focus {
-  outline: none;
-}
-
-.nav-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .corner-buttons {
-    flex-direction: column;
-    left: 10px;
-    bottom: 10px;
-  }
-
-  .nav-button {
-    width: 100%;
-  }
+  background-color: #e64a19;
 }
 </style>

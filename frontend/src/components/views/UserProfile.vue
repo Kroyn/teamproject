@@ -9,10 +9,18 @@
 
     <div v-else class="user-info">
       <p>Вітаємо, {{ user.firstName }} {{ user.lastName }}!</p>
-      <p>Ваші заброньовані тури:</p>
-      <!-- Тут буде список турів -->
-      <p>Зареєстроване спорядження:</p>
-      <!-- Тут буде список спорядження -->
+      <p>Ваші замовлення:</p>
+      <div v-if="orders.length > 0">
+        <div v-for="(order, index) in orders" :key="index" class="order">
+          <p><strong>Послуга:</strong> {{ order.serviceName }}</p>
+          <p><strong>Дата замовлення:</strong> {{ order.orderDate }}</p>
+          <p><strong>Статус:</strong> {{ order.status }}</p>
+          <p><strong>Ціна:</strong> {{ order.price }} грн</p>
+        </div>
+      </div>
+      <div v-else>
+        <p>У вас немає замовлень.</p>
+      </div>
       <button class="logout-button" @click="logOut">Вихід</button>
     </div>
   </div>
@@ -20,6 +28,7 @@
 
 <script>
 import { getUserProfile } from '@/components/conect/ProfileAPI';
+import { getUserOrders } from '@/components/conect/OrdersAPI';
 import { logoutUser } from '@/components/conect/LogoutAPI';
 
 export default {
@@ -29,7 +38,8 @@ export default {
       user: {
         firstName: '',
         lastName: ''
-      }
+      },
+      orders: []  // Додано масив для зберігання замовлень
     };
   },
   async mounted() {
@@ -39,8 +49,12 @@ export default {
         const userData = await getUserProfile(token);
         this.user = userData;
         this.isLoggedIn = true;
+
+        // Отримуємо замовлення користувача
+        const userOrders = await getUserOrders(token);
+        this.orders = userOrders;
       } catch (error) {
-        console.error('Помилка авторизації:', error);
+        console.error('Помилка авторизації або отримання замовлень:', error);
         localStorage.removeItem('token');
         this.isLoggedIn = false;
       }
@@ -116,5 +130,13 @@ export default {
 
 .logout-button:hover {
   background-color: #c9302c;
+}
+
+.order {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 </style>
